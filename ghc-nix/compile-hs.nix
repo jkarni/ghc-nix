@@ -105,7 +105,7 @@ let
   # a trick for file-embed
   touch .cabal
 
-  "$ghcPath" "$moduleBasePath.hs" -v "''${ghcOptions[@]}"
+  "$ghcPath" "$moduleBasePath.hs" "''${ghcOptions[@]}"
 
   shopt -s nullglob
   $mkdir -p "''${outputs[out]}/$hsRelDir"
