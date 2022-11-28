@@ -83,8 +83,8 @@ main = do
     "--interactive" : _ ->
       proxyToGHC
 
-    -- "--abi-hash" : _ ->
-    --   proxyToGHC
+    "--abi-hash" : _ ->
+      proxyToGHC
 
     _ -> GHC.runGhc ( Just GHC.libdir ) do
       ( files, verbosity ) <-
