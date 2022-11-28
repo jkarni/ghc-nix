@@ -83,9 +83,14 @@ main = do
     "--interactive" : _ ->
       proxyToGHC
 
+    -- "--abi-hash" : _ ->
+    --   proxyToGHC
+
     _ -> GHC.runGhc ( Just GHC.libdir ) do
       ( files, verbosity ) <-
         interpretCommandLine
+      when (verbosity >= 5 ) do
+        liftIO . putStrLn $ "ghc-nix received the following arguments: " <> unwords commandLineArguments
 
       if ".c" `elem` map takeExtension files || ".o" `elem` map takeExtension files || ".dyn_o" `elem` map takeExtension files
         then proxyToGHC
