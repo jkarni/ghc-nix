@@ -303,7 +303,7 @@ interpretCommandLine = do
   _ <-
     GHC.setSessionDynFlags dynFlags
 
-  return ( map GHC.unLoc files, 5)
+  return ( map GHC.unLoc files, GHC.verbosity dynFlags)
 
 
 nixBuildHaskell

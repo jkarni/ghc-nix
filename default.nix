@@ -5,10 +5,9 @@ let compiler = "ghc922";
           ghc-nix = pkgs.haskell.packages."${compiler}".callCabal2nix "ghc-nix" ./ghc-nix {};
       in pkg : ( pkgs.haskell.lib.overrideCabal pkg
             ( drv:
-              { configureFlags = [ "-v -w ${ghc-nix}/bin/ghc-nix" ];
+              { configureFlags = [ "-w ${ghc-nix}/bin/ghc-nix" ];
                 # TODO: cctools on darwins
                 buildTools = (drv.buildTools or []) ++ [ pkgs.bash pkgs.which pkgs.nix pkgs.coreutils pkgs.jq pkgs.gnused pkgs.rsync ] ;
-                buildFlags = (drv.buildFlags or []) ++ [ "-v" ];
                 preConfigure =
                   # We add all the executables (markdown-unlit,
                   # hspec-discover, etc) we find in the relevant sections

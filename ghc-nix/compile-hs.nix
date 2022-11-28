@@ -52,7 +52,6 @@ let
     args = [ "-e" (builtins.toFile "builder.sh"
     ''
     set -o errexit
-    set -o xtrace
     # See https://github.com/NixOS/nix/issues/6736
     if [ ! -f "$NIX_ATTRS_SH_FILE" ]; then
       export NIX_ATTRS_SH_FILE="/build/.attrs.sh"
@@ -78,7 +77,6 @@ let
   builder = builtins.toFile "builder.sh"
   ''
   set -o errexit
-  set -o xtrace
   # See https://github.com/NixOS/nix/issues/6736
   if [ ! -f "$NIX_ATTRS_SH_FILE" ]; then
     export NIX_ATTRS_SH_FILE="/build/.attrs.sh"
