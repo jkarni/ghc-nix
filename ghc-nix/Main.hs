@@ -427,14 +427,14 @@ nixBuildHaskell ghcOptions dependencyGraph verbosity packageDbs exeModuleName ho
             ( [ "--extra-experimental-features", "nix-command"
               , "build"
               , "-f", fromString hsBuilder
-              , "--substituters", Maybe.fromMaybe "" mNixSubstituters -- we could use builtin substituters, but they could be slow
+              -- , "--substituters", Maybe.fromMaybe "" mNixSubstituters -- we could use builtin substituters, but they could be slow
               , "--argstr", "jsonArgsFile", fromString ( Turtle.encodeString jsonFile )
               , "--no-link"
               , "--json"
               , "-L"
               , "--show-trace"
-              , "--option", "max-jobs", fromString ( show ( max (numProcs - 1) 1 ) )
-              , "--option", "cores", "1"
+              -- , "--option", "max-jobs", fromString ( show ( max (numProcs - 1) 1 ) )
+              , "--option", "max-jobs", "5"
               , "--option", "max-silent-time", "60"
               , "--option", "timeout", "120"
               , "--option", "build-poll-interval", "1"
