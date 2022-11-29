@@ -227,24 +227,24 @@ compileHaskell files verbosity = do
     Nothing -> do
       workingDirectory <- liftIO getWorkingDirectory
       return ( Turtle.decodeString workingDirectory Turtle.</> ".ghc-nix" )
-  outputsToReplace <- fmap Maybe.catMaybes ( forM outputs \output -> liftIO do
-    fileName <- Turtle.readTextFile ( Turtle.fromText output Turtle.</> "nix-support" Turtle.</> "module-path" )
-    let root = cacheDir Turtle.</> Turtle.fromText fileName
-    exists <- Turtle.testfile root
-    if exists then do
-      oldOutput <- Turtle.readlink root
-      if ( oldOutput /= Turtle.fromText output ) then do
-        Turtle.rm root
-        return ( Just output )
-      else return Nothing
-    else return Nothing )
-  unless ( null outputsToReplace ) do
-    _ <- liftIO ( Turtle.procs "nix"
-      ([ "--extra-experimental-features", "nix-command"
-      , "store"
-      , "delete"
-      ] ++ outputsToReplace) empty )
-    return ()
+  -- outputsToReplace <- fmap Maybe.catMaybes ( forM outputs \output -> liftIO do
+  --   fileName <- Turtle.readTextFile ( Turtle.fromText output Turtle.</> "nix-support" Turtle.</> "module-path" )
+  --   let root = cacheDir Turtle.</> Turtle.fromText fileName
+  --   exists <- Turtle.testfile root
+  --   if exists then do
+  --     oldOutput <- Turtle.readlink root
+  --     if ( oldOutput /= Turtle.fromText output ) then do
+  --       Turtle.rm root
+  --       return ( Just output )
+  --     else return Nothing
+  --   else return Nothing )
+  -- unless ( null outputsToReplace ) do
+  --   _ <- liftIO ( Turtle.procs "nix"
+  --     ([ "--extra-experimental-features", "nix-command"
+  --     , "store"
+  --     , "delete"
+  --     ] ++ outputsToReplace) empty )
+  --   return ()
   forM_ outputs \output -> liftIO do
     fileName <- Turtle.readTextFile ( Turtle.fromText output Turtle.</> "nix-support" Turtle.</> "module-path" )
     let root = cacheDir Turtle.</> Turtle.fromText fileName
