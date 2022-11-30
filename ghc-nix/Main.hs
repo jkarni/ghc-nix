@@ -438,7 +438,7 @@ nixBuildHaskell ghcOptions dependencyGraph verbosity packageDbs exeModuleName ho
               , "--show-trace"
               -- , "--option", "max-jobs", fromString ( show ( max (numProcs - 1) 1 ) )
               , "--option", "max-jobs", "5"
-              , "--option", "max-silent-time", "60"
+              , "--option", "max-silent-time", "300"
               , "--option", "timeout", "120"
               , "--option", "build-poll-interval", "1"
               ] ++ [ "-vvvvv" | verbosity >= 5 ]
