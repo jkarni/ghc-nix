@@ -36,9 +36,10 @@ let compiler = "ghc922";
                     (self': super': rec {
                       withGhcNix = withGhcNix' super compiler;
                       callPackageIncrementally = drv: args: withGhcNix (super'.callPackage drv args);
-                    })
-                    (self.haskell.lib.packageSourceOverrides {
-                      ghc-nix = ./ghc-nix;
+                      ghc-nix = (super'.callCabal2nix "ghc-nix" ./ghc-nix {}).overrideAttrs( old: {
+                         requiredSystemFeatures = (old.requiredSystemFeatures or []) ++ [ "recursive-nix" ];
+                         NIX_PATH = super.pkgs.path;
+                      });
                     })
                     ];
               })
