@@ -68,6 +68,9 @@ main = do
     "--numeric-version" : _ ->
       proxyToGHC
 
+    "--version" : _ ->
+      proxyToGHC
+
     "--supported-languages" : _ ->
       proxyToGHC
 
