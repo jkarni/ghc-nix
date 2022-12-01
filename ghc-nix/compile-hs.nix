@@ -22,7 +22,6 @@ let
     builder = builtins.storePath args.bash;
     outputs = [ "out" ];
     __structuredAttrs = true;
-    __noChroot = true;
     preferLocalBuild = true;
 
     inherit (args) system;
@@ -167,7 +166,6 @@ let
   hsModules = builtins.mapAttrs (moduleName: { hsPath, dependencies }:
     derivation (baseArgs // {
       name = moduleName;
-      __noChroot = true;
       moduleBasePath = builtins.replaceStrings ["."] ["/"] moduleName;
       hsNixPath = if isAbsolute hsPath then /. + hsPath else /. + "${args.workingDirectory}/${hsPath}";
 

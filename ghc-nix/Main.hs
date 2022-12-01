@@ -257,7 +257,6 @@ compileHaskell files verbosity = do
       , "build"
       , output
       , "-o", fromString ( Turtle.encodeString root )
-      , "--impure"
       , "--print-build-logs"
       ] empty
     return ()
@@ -435,7 +434,6 @@ nixBuildHaskell ghcOptions dependencyGraph verbosity packageDbs exeModuleName ho
               -- , "--substituters", Maybe.fromMaybe "" mNixSubstituters -- we could use builtin substituters, but they could be slow
               , "--argstr", "jsonArgsFile", fromString ( Turtle.encodeString jsonFile )
               , "--no-link"
-              , "--impure"
               , "--json"
               , "-L"
               , "--show-trace"
