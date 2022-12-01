@@ -257,6 +257,7 @@ compileHaskell files verbosity = do
       , "build"
       , output
       , "-o", fromString ( Turtle.encodeString root )
+      , "--print-build-logs"
       ] empty
     return ()
 
@@ -427,7 +428,7 @@ nixBuildHaskell ghcOptions dependencyGraph verbosity packageDbs exeModuleName ho
       Turtle.fold
         ( Turtle.inproc
             "nix"
-            ( [ "--extra-experimental-features", "nix-command"
+            ( [ "--extra-experimental-features", "nix-command recursive-nix"
               , "build"
               , "-f", fromString hsBuilder
               -- , "--substituters", Maybe.fromMaybe "" mNixSubstituters -- we could use builtin substituters, but they could be slow
