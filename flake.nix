@@ -21,27 +21,35 @@
         rec {
           overlays.default = overlay;
           packages.default = pkgs.haskell.packages."${compiler}".ghc-nix;
-          packages.withCabal = pkgs.stdenv.mkDerivation {
-            name = "with-cabal";
-            buildInputs = with pkgs; [ ghc bash nix which coreutils jq gnused rsync ];
+          packages.self-with-cabal = lib.withCabal {
+            buildInputs = packages.default.getBuildInputs.haskellBuildInputs;
+            ghcVersion = "ghc922";
             src = ./ghc-nix;
+          };
+          lib.withCabal = { buildInputs, src, ghcVersion } :
+           let ghc = pkgs.haskell.packages."${ghcVersion}".ghcWithPackages (p: buildInputs);
+           in pkgs.stdenv.mkDerivation {
+            name = "with-cabal";
+            buildInputs = with pkgs; buildInputs ++ [ ghc bash nix which coreutils jq gnused rsync ];
+            inherit src;
             requiredSystemFeatures = [ "recursive-nix" ];
             buildPhase = ''
-              # see https://github.com/haskell/cabal/issues/5783#issuecomment-464136859
+              export NIX_STATE_DIR=$TMPDIR
               export HOME=$(pwd)
+              opts='--experimental-features nix-command --extra-experimental-features flakes'
+              PATH=${builtins.getEnv "NIX_BIN_DIR"}:$PATH
+              # see https://github.com/haskell/cabal/issues/5783#issuecomment-464136859
               mkdir .cabal
               touch .cabal/config
               export PATH=$NIX_GHCPKG:$PATH
-              eval $(grep export ${pkgs.ghc}/bin/ghc)
-              nix --version
-              ${packages.default}/bin/ghc-nix --numeric-version
-              ${pkgs.cabal-install}/bin/cabal build --enable-tests -w "${packages.default}/bin/ghc-nix"
+              eval $(grep export ${ghc}/bin/ghc)
+              ${pkgs.cabal-install}/bin/cabal build -v -w "${packages.default}/bin/ghc-nix" --enable-tests
             '';
             checkPhase = ''
               ${pkgs.cabal-install}/bin/cabal test -w "${packages.default}/bin/ghc-nix"
             '';
             installPhase = ''
-              ${pkgs.cabal-install}/bin/cabal install --output-dir=$out
+              ${pkgs.cabal-install}/bin/cabal install --installdir=$out
             '';
           };
 
