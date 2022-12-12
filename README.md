@@ -49,48 +49,45 @@ make-content-addressable`.
 
 # Trying this Out
 
-This project is still in very early days, so it's not too easy to use... yet.
-Maybe you can help here! To try `ghc-nix` out you will need:
+This library exposes three functions:
 
-## Nix changes
+1) `withGhcNix` : takes a package as an argument
+2) `callPackageIncrementally`: a drop-in replacement for `pkgs.haskell.callPackage`.
+   Uses `withGhcNix` under the hood.
+3) `withCabalIncrementally`: builds incrementally with cabal. Takes a
+  `{ buildInputs, src}` attset as argument.
 
-* A version of Nix that is at least `4511f09b490fad4ce0dcfbcd7c4fd83b11e7df46`.
+We for the moment recommend the third first, since it uses less disk space. But
+it is less likely to work for all cases.
 
-* `nix-command` and `ca-references` enabled as experimental features.
+The package exports these functions as overlays into the
+`pkgs.haskell.packages.$compiler` attribute so that the traditional ways of
+e.g. overriding or extending package sets still work.
 
-Heres's a snippet of my `configuration.nix` that should get you this.
+Here is an example, using flakes, of each of them, and assuming you have a
+package source in `.`, and a traditional (e.g. `cabal2nix`-generated)
+`my-package.nix`:
+:
 
-  ```nix
-  {
-    systemFeatures =
-      [ "benchmark" "big-parallel" "kvm" "nixos-test" "recursive-nix" "nix-command" "ca-references" ];
+```
+{ inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/22.05";
+    flake-utils.url = "github:numtide/flake-utils/v1.0.0";
+    ghc-nix.url = "github:jkarni/ghc-nix";
+  };
 
-    extraOptions =
-      ''
-      experimental-features = recursive-nix nix-command ca-references
-      '';
-
-    package =
-      let
-        src =
-          pkgs.fetchFromGitHub
-            { owner =
-                "NixOS";
-
-              repo =
-                "nix";
-
-              rev =
-                "9f7b4d068cc106e5d902dc6f52bf46d4a057fd00";
-
-              sha256 =
-                "187pfanj0g49ng5smfi8rwkq1l3r43mf85yv390h0ars050fxfik";
-            };
-
-      in
-      ( import "${src}/release.nix" { nix = src; officialRelease = true; } ).build.x86_64-linux;
-  }
-  ```
+  outputs = { self, nixpkgs, flake-utils, ghc-nix }:
+    flake-utils.lib.eachDefaultSystem (system:
+    let compiler = "ghc922" # change this as desired
+        ghc = pkgs.haskell.packages."${compiler}
+    {
+      packages.myPackageWithGhcNix =
+        ghc.withGhcNix (ghc.callPackage ./my-package.nix {});
+      packages.myPackageCallPackageIncrementally =
+        ghc.callPackageIncrementall ./my-package.nix {};
+      packages.myPackageWithCabalIncrementally =
+    };
+```
 
 
 ## Building `ghc-nix`
