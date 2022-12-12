@@ -2,7 +2,7 @@ let compiler = "ghc922";
     config = { };
     withGhcNix' = pkgs: compiler :
       let inherit (pkgs.lib) or makeSearchPath;
-          ghc-nix = pkgs.haskell.packages."${compiler}".callCabal2nix "ghc-nix" ./ghc-nix {};
+          ghc-nix = pkgs.haskell.packages."${compiler}".callPackage ./ghc-nix {};
       in pkg : ( pkgs.haskell.lib.overrideCabal pkg
             ( drv:
               { configureFlags = [ "-w ${ghc-nix}/bin/ghc-nix" ];
@@ -36,7 +36,7 @@ let compiler = "ghc922";
                     (self': super': rec {
                       withGhcNix = withGhcNix' super compiler;
                       callPackageIncrementally = drv: args: withGhcNix (super'.callPackage drv args);
-                      ghc-nix = (super'.callCabal2nix "ghc-nix" ./ghc-nix {}).overrideAttrs( old: {
+                      ghc-nix = (super'.callPackage ./ghc-nix {}).overrideAttrs( old: {
                          requiredSystemFeatures = (old.requiredSystemFeatures or []) ++ [ "recursive-nix" ];
                          NIX_PATH = super.pkgs.path;
                       });

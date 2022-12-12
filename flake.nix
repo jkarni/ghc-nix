@@ -28,9 +28,9 @@
             requiredSystemFeatures = [ "recursive-nix" ];
             buildPhase = ''
               # see https://github.com/haskell/cabal/issues/5783#issuecomment-464136859
+              export HOME=$(pwd)
               mkdir .cabal
               touch .cabal/config
-              ${pkgs.hpack}/bin/hpack
               export PATH=$NIX_GHCPKG:$PATH
               eval $(grep export ${pkgs.ghc}/bin/ghc)
               nix --version
