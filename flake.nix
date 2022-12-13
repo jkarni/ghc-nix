@@ -61,7 +61,7 @@
           # packages.other-test2 = lib.withGhcNix pkgs.haskell.packages."${compiler}".generics-eot;
 
           devShells.default = packages.default.env.overrideAttrs(oldAttrs : {
-            buildInputs = [pkgs.cabal-install ] ++ oldAttrs.buildInputs;
+            buildInputs = [pkgs.cabal-install pkgs.cabal2nix] ++ oldAttrs.buildInputs;
           });
 
           apps.default = {

@@ -1,7 +1,6 @@
 { mkDerivation, aeson, async, base, bytestring, Cabal, containers
-, directory, filepath, foldl, ghc, ghc-paths, safe-exceptions
-, stdenv, temporary, text, turtle, unix, unliftio
-, unordered-containers
+, directory, filepath, foldl, ghc, ghc-paths, lib, safe-exceptions
+, temporary, text, turtle, unix, unliftio, unordered-containers
 }:
 mkDerivation {
   pname = "ghc-nix";
@@ -17,5 +16,5 @@ mkDerivation {
   ];
   description = "Build Haskell projects using Nix as a build cache";
   license = "unknown";
-  hydraPlatforms = stdenv.lib.platforms.none;
+  hydraPlatforms = lib.platforms.none;
 }
