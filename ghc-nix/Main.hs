@@ -253,7 +253,7 @@ compileHaskell files verbosity = do
     let root = cacheDir Turtle.</> Turtle.fromText fileName
     Turtle.mktree ( Turtle.decodeString ( takeDirectory ( Turtle.encodeString root ) ) )
     _ <- Turtle.procs "nix"
-      [ "--extra-experimental-features", "nix-command"
+      [ "--extra-experimental-features", "nix-command recursive-nix"
       , "build"
       , output
       , "-o", fromString ( Turtle.encodeString root )
