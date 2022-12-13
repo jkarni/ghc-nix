@@ -34,9 +34,7 @@
             inherit src;
             requiredSystemFeatures = [ "recursive-nix" ];
             buildPhase = ''
-              export NIX_STATE_DIR=$TMPDIR
               export HOME=$(pwd)
-              opts='--experimental-features nix-command --extra-experimental-features flakes'
               PATH=${builtins.getEnv "NIX_BIN_DIR"}:$PATH
               # see https://github.com/haskell/cabal/issues/5783#issuecomment-464136859
               mkdir .cabal

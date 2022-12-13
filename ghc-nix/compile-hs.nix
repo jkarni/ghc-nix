@@ -21,6 +21,7 @@ let
     name = "packagedb";
     builder = builtins.storePath args.bash;
     outputs = [ "out" ];
+    requiredSystemFeatures = [ "recursive-nix" ];
     __structuredAttrs = true;
     preferLocalBuild = true;
 
@@ -122,6 +123,7 @@ let
     inherit PATH;
     builder = builtins.storePath args.bash;
     outputs = [ "out" ];
+    requiredSystemFeatures = [ "recursive-nix" ];
     __structuredAttrs = true;
     preferLocalBuild = true;
     inherit (args) system;
